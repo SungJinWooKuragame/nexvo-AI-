@@ -1,0 +1,4 @@
+node_modules/
+.env
+data/bookings.json
+npm-debug.log*

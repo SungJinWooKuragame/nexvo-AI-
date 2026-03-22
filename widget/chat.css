@@ -1,0 +1,192 @@
+:root {
+  --nex-bg: #0f0f0f;
+  --nex-surface: #161618;
+  --nex-surface-elevated: #1e1e22;
+  --nex-text: #f0f0f0;
+  --nex-muted: #888894;
+  --nex-accent: #8b5cf6;
+  --nex-line: #2a2a2e;
+}
+
+.nex-widget {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.nex-toggle {
+  border: 1px solid var(--nex-line);
+  background: var(--nex-surface-elevated);
+  color: var(--nex-text);
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.nex-panel {
+  width: min(380px, calc(100vw - 24px));
+  height: 540px;
+  background: var(--nex-bg);
+  border: 1px solid var(--nex-line);
+  border-radius: 10px;
+  display: none;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.nex-panel.open {
+  display: grid;
+}
+
+.nex-header {
+  padding: 14px;
+  border-bottom: 1px solid var(--nex-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nex-title {
+  font-weight: 700;
+  color: var(--nex-text);
+  font-size: 0.98rem;
+}
+
+.nex-close {
+  background: transparent;
+  border: 1px solid var(--nex-line);
+  color: var(--nex-muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.nex-messages {
+  padding: 14px;
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.nex-msg {
+  max-width: 88%;
+  border-radius: 8px;
+  padding: 10px 12px;
+  line-height: 1.45;
+  font-size: 0.93rem;
+  white-space: pre-line;
+}
+
+.nex-msg.bot {
+  background: var(--nex-surface);
+  color: var(--nex-text);
+  border: 1px solid var(--nex-line);
+}
+
+.nex-msg.user {
+  background: #1c1c21;
+  color: var(--nex-text);
+  justify-self: end;
+  border: 1px solid var(--nex-accent);
+}
+
+.nex-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.nex-chip {
+  border: 1px solid var(--nex-line);
+  background: transparent;
+  color: var(--nex-text);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.nex-chip:hover {
+  background: var(--nex-surface-elevated);
+  border-color: var(--nex-accent);
+}
+
+.nex-footer {
+  border-top: 1px solid var(--nex-line);
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.nex-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.nex-input {
+  width: 100%;
+  border: 1px solid var(--nex-line);
+  background: #141418;
+  color: var(--nex-text);
+  border-radius: 6px;
+  padding: 10px;
+  outline: none;
+}
+
+.nex-send {
+  border: 1px solid var(--nex-line);
+  background: transparent;
+  color: var(--nex-text);
+  border-radius: 6px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.nex-send:hover {
+  background: var(--nex-surface-elevated);
+  border-color: var(--nex-accent);
+}
+
+.nex-typing {
+  color: var(--nex-muted);
+  font-size: 0.8rem;
+  display: none;
+}
+
+.nex-typing.show {
+  display: block;
+}
+
+.nex-inline-root {
+  width: min(460px, 100%);
+  margin: 20px auto;
+}
+
+.nex-inline-root .nex-panel {
+  position: static;
+  width: 100%;
+  display: grid;
+  height: 620px;
+}
+
+.nex-inline-root .nex-toggle {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .nex-widget {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .nex-panel {
+    height: min(76vh, 560px);
+  }
+}
