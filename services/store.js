@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const dataPath = path.join(process.cwd(), "data", "bookings.json");
+const siteStatePath = path.join(process.cwd(), "data", "site-state.json");
 const sessions = new Map();
 const bookingCounterByIp = new Map();
 
@@ -64,4 +65,27 @@ export function increaseBookingCounter(ip) {
   const key = `${new Date().toISOString().slice(0, 10)}:${ip || "unknown"}`;
   const count = bookingCounterByIp.get(key) || 0;
   bookingCounterByIp.set(key, count + 1);
+}
+
+async function ensureSiteStateFile() {
+  try {
+    await fs.access(siteStatePath);
+  } catch {
+    await fs.mkdir(path.dirname(siteStatePath), { recursive: true });
+    await fs.writeFile(siteStatePath, "{}", "utf-8");
+  }
+}
+
+export async function readSiteState() {
+  await ensureSiteStateFile();
+  const raw = await fs.readFile(siteStatePath, "utf-8");
+  const parsed = JSON.parse(raw || "{}");
+  if (!parsed || typeof parsed !== "object") return {};
+  return parsed;
+}
+
+export async function saveSiteState(nextState) {
+  await ensureSiteStateFile();
+  await fs.writeFile(siteStatePath, JSON.stringify(nextState || {}, null, 2), "utf-8");
+  return nextState;
 }

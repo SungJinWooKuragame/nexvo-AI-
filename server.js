@@ -5,7 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import chatRoute from "./routes/chat.js";
 import bookingRoute from "./routes/booking.js";
-import { listBookings } from "./services/store.js";
+import { listBookings, readSiteState, saveSiteState } from "./services/store.js";
 import { startReminderWorker } from "./services/reminder.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,7 +14,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 
 app.use(cors());
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/widget", express.static(path.join(__dirname, "widget")));
@@ -26,6 +26,39 @@ app.get("/health", (_req, res) => {
 app.use("/api/chat", chatRoute);
 app.use("/api/book", bookingRoute);
 app.use("/api/bookings", bookingRoute);
+
+app.get("/api/site-state", async (_req, res) => {
+  try {
+    const state = await readSiteState();
+    res.json({ ok: true, state });
+  } catch (error) {
+    console.error("[site-state:get]", error);
+    res.status(500).json({ ok: false, error: "Nao foi possivel carregar estado global." });
+  }
+});
+
+app.put("/api/site-state", async (req, res) => {
+  try {
+    const incoming = req.body?.state;
+    if (!incoming || typeof incoming !== "object") {
+      return res.status(400).json({ ok: false, error: "Payload invalido: esperado { state }." });
+    }
+
+    const nextState = {
+      ...incoming,
+      _meta: {
+        ...(incoming._meta || {}),
+        updatedAt: new Date().toISOString()
+      }
+    };
+
+    await saveSiteState(nextState);
+    res.json({ ok: true, state: nextState });
+  } catch (error) {
+    console.error("[site-state:put]", error);
+    res.status(500).json({ ok: false, error: "Nao foi possivel salvar estado global." });
+  }
+});
 
 app.get("/admin/bookings", async (_req, res) => {
   const bookings = await listBookings();
